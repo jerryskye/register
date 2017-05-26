@@ -72,6 +72,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'admin' => !(array_key_exists('uid', $data) || array_key_exists('album_no', $data)),
         ]);
     }
 
