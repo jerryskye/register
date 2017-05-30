@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
+use Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
+use App\RegistrationToken;
 
 class RegisterController extends Controller
 {
@@ -77,17 +80,26 @@ class RegisterController extends Controller
     }
 
     protected function handle_registration_token(Request $request) {
-      return $request->input('registration_token') == 'supersekretkurde';
+      try {
+        $ary = json_decode(Crypt::decryptString($request->input('registration')), true);
+        if(isset($ary['token'])) {
+          $request['uid'] = $ary['uid'];
+          return RegistrationToken::where('token', $ary['token'])->delete() > 0;
+        }
+        else
+          return false;
+      }
+      catch(DecryptException $e) {
+        return false;
+      }
     }
 
     public function showRegistrationForm(Request $request)
     {
-        if($this->guard()->check() and $this->guard()->id() == $_ENV['ADMIN_ID'])
-          return view('auth.register_student');
-        if($request->has('registration_token') and $this->handle_registration_token($request))
-          return view('auth.register_admin');
+        if($request->has('registration') and $this->handle_registration_token($request))
+          return view('auth.register_'.($request->has('uid') ? 'student' : 'admin'));
 
-        return redirect('login');
+        return redirect('/');
     }
 
     public function register(Request $request)
