@@ -10,7 +10,11 @@ class Entry extends Model
         'uid',
     ];
 
-  public function user() {
-    return $this->belongsTo('App\User', 'uid', 'uid');
-  }
+    public function user() {
+      return $this->belongsTo('App\User', 'uid', 'uid');
+    }
+
+    public function lecture() {
+      return $this->belongsTo('App\Lecture');
+    }
 }

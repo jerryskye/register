@@ -83,8 +83,10 @@ class RegisterController extends Controller
       try {
         $ary = json_decode(Crypt::decryptString($request->input('registration')), true);
         if(isset($ary['token'])) {
-          $request['uid'] = $ary['uid'];
-          return RegistrationToken::where('token', $ary['token'])->delete() > 0;
+          if(isset($ary['uid']))
+            $request['uid'] = $ary['uid'];
+          $request->session()->put('token', $ary['token']);
+          return RegistrationToken::where('token', $ary['token'])->count() > 0;
         }
         else
           return false;
@@ -107,6 +109,8 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
+
+        RegistrationToken::where('token', $request->session()->pull('token', ''))->delete();
 
         #$this->guard()->login($user);
 
