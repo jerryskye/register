@@ -85,6 +85,7 @@ class RegisterController extends Controller
         if(isset($ary['token'])) {
           if(isset($ary['uid']))
             $request['uid'] = $ary['uid'];
+          $request['role'] = isset($ary['uid']) ? 'student' : 'admin';
           $request->session()->put('token', $ary['token']);
           return RegistrationToken::where('token', $ary['token'])->count() > 0;
         }
@@ -99,7 +100,7 @@ class RegisterController extends Controller
     public function showRegistrationForm(Request $request)
     {
         if($request->has('registration') and $this->handle_registration_token($request))
-          return view('auth.register_'.($request->has('uid') ? 'student' : 'admin'));
+          return view('auth.register_'.$request['role']);
 
         return redirect('/');
     }
