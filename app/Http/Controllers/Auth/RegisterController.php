@@ -32,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -75,7 +75,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'admin' => !(array_key_exists('uid', $data) || array_key_exists('album_no', $data)),
+            'admin' => array_key_exists('album_no', $data),
         ]);
     }
 
@@ -85,9 +85,12 @@ class RegisterController extends Controller
         if(isset($ary['token'])) {
           if(isset($ary['uid']))
             $request['uid'] = $ary['uid'];
-          $request['role'] = isset($ary['uid']) ? 'student' : 'admin';
-          $request->session()->put('token', $ary['token']);
-          return RegistrationToken::where('token', $ary['token'])->count() > 0;
+          $token = RegistrationToken::where('token', $ary['token'])->first();
+          if($token === null)
+            return false;
+          $request['role'] = $token->admin ? 'admin' : 'student';
+          $request->session()->flash('registration_token', $ary['token']);
+          return true;
         }
         else
           return false;
@@ -111,7 +114,7 @@ class RegisterController extends Controller
 
         event(new Registered($user = $this->create($request->all())));
 
-        RegistrationToken::where('token', $request->session()->pull('token', ''))->delete();
+        RegistrationToken::where(['token' => $request->session()->pull('registration_token', '')])->first()->delete();
 
         #$this->guard()->login($user);
 

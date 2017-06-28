@@ -17,3 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 */
 Route::resource('entries', 'EntryController', ['only' => ['store']]);
+#Route::resource('lectures', 'LectureController', ['only' => ['store', 'update']]);

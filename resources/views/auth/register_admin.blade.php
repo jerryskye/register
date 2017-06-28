@@ -10,6 +10,8 @@
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}
 
+                        <input id="uid" type="hidden" class="form-control" name="uid" value="{{ app('request')->input('uid') }}" required>
+
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name</label>
 

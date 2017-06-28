@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class RegistrationToken extends Model
 {
     protected $fillable = [
-        'token',
+        'token', 'admin'
     ];
 }

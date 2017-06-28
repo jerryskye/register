@@ -34,4 +34,8 @@ class User extends Authenticatable
     public function lectures() {
       return $this->hasMany('App\Lecture');
     }
+
+    public function role() {
+      return $this->admin ? 'admin' : 'student';
+    }
 }

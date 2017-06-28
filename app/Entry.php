@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Entry extends Model
 {
     protected $fillable = [
-        'uid',
+        'uid', 'lecture_id',
     ];
 
     public function user() {

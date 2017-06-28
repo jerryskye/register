@@ -16,6 +16,7 @@ class CreateRegistrationTokensTable extends Migration
         Schema::create('registration_tokens', function (Blueprint $table) {
             $table->increments('id');
             $table->string('token', 32)->unique();
+            $table->boolean('admin');
             $table->timestamps();
         });
     }

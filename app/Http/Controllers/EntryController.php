@@ -7,6 +7,9 @@ use App\Entry;
 use Illuminate\Http\Request;
 use Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+use App\User;
+use Carbon\Carbon;
+use App\Lecture;
 
 class EntryController extends Controller
 {
@@ -32,7 +35,14 @@ class EntryController extends Controller
       if($validator->fails())
         return response()->json(['errors' => $validator->errors()], 422);
       else {
-        Entry::create($data);
+        if($user = User::where(['uid' => $data['uid'], 'admin' => true])->first())
+          Lecture::create(['subject' => null, 'user_id' => $user->id, 'begin' => Carbon::now(), 'end' => Carbon::now()->addMinutes(90)]);
+        else {
+          $lecture = Lecture::where([['begin', '<=', Carbon::now()], ['end', '>=', Carbon::now()]])->first();
+          if($lecture != null)
+            $data['lecture_id'] = $lecture->id;
+          Entry::create($data);
+        }
         return response()->json(['errors' => []], 201);
       }
     }

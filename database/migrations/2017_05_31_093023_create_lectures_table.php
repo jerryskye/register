@@ -15,10 +15,10 @@ class CreateLecturesTable extends Migration
     {
         Schema::create('lectures', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('subject');
+            $table->string('subject')->nullable();
             $table->integer('user_id')->unsigned()->nullable();
-            $table->timestamp('began_at')->nullable();
-            $table->timestamp('ended_at')->nullable();
+            $table->timestamp('begin')->nullable();
+            $table->timestamp('end')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
         });
@@ -38,6 +38,7 @@ class CreateLecturesTable extends Migration
     {
         Schema::table('entries', function (Blueprint $table) {
           $table->dropForeign('entries_lecture_id_foreign');
+          $table->dropColumn('lecture_id');
         });
 
         Schema::dropIfExists('lectures');
