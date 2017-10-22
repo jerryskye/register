@@ -31,6 +31,10 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.1]
       # t.datetime :locked_at
 
 
+      t.string :name, null: false
+      t.integer :album_no
+      t.string :uid, limit: 64, null: false
+      t.boolean :admin, null: false, default: false
       t.timestamps null: false
     end
 

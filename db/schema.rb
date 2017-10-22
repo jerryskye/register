@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 20171022122302) do
   enable_extension "plpgsql"
 
   create_table "registration_tokens", force: :cascade do |t|
-    t.boolean "admin"
-    t.string "token", limit: 32
+    t.boolean "admin", default: false, null: false
+    t.string "token", limit: 32, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["token"], name: "index_registration_tokens_on_token", unique: true
@@ -29,6 +29,10 @@ ActiveRecord::Schema.define(version: 20171022122302) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "name"
+    t.integer "album_no"
+    t.string "uid", limit: 64
+    t.boolean "admin"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
