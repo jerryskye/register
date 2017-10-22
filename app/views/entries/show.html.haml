@@ -1,0 +1,10 @@
+%p#notice= notice
+
+%p
+  %b User:
+  = @entry.user
+%p
+  %b Created at:
+  = @entry.created_at
+
+= link_to 'Back', entries_path

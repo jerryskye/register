@@ -1,0 +1,19 @@
+%p#notice= notice
+
+%h1 Listing entries
+
+%table
+  %thead
+    %tr
+      %th User
+      %th Created at
+      %th
+
+  %tbody
+    - @entries.each do |entry|
+      %tr
+        %td= entry.user
+        %td= entry.created_at
+        %td= link_to 'Show', entry
+
+%br
