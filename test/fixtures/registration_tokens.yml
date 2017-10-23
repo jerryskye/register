@@ -2,8 +2,8 @@
 
 one:
   admin: false
-  token: MyString
+  token: <%= SecureRandom.hex(16) %>
 
 two:
-  admin: false
-  token: MyString
+  admin: true
+  token: <%= SecureRandom.hex(16) %>
