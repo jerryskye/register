@@ -8,13 +8,13 @@ class UserAddingTest < ActionDispatch::IntegrationTest
   test "should show error for no params" do
     get new_user_registration_url
     assert_redirected_to registration_error_path
-    assert_equal(flash[:alert], "You need a valid registration token and UID.")
+    assert_equal("You need a valid registration token and UID.", flash[:alert])
   end
 
   test "should show error for token only" do
     get new_user_registration_url, params: { token: @user_token.token }
     assert_redirected_to registration_error_path
-    assert_equal(flash[:alert], "You need a valid registration token and UID.")
+    assert_equal("You need a valid registration token and UID.", flash[:alert])
   end
 
   test "should show error for no uid" do
@@ -22,7 +22,7 @@ class UserAddingTest < ActionDispatch::IntegrationTest
     hash = Digest::SHA256.hexdigest(Rails.application.secrets[:secret_key_base] + salt)
     get new_user_registration_url, params: { salt: salt, hash: hash, token: @user_token.token}
     assert_redirected_to registration_error_path
-    assert_equal(flash[:alert], "You need a valid registration token and UID.")
+    assert_equal("You need a valid registration token and UID.", flash[:alert])
   end
 
   test "should show error for bad hash" do
@@ -30,7 +30,7 @@ class UserAddingTest < ActionDispatch::IntegrationTest
     hash = Digest::SHA256.hexdigest(salt)
     get new_user_registration_url, params: { salt: salt, hash: hash, token: @user_token.token}
     assert_redirected_to registration_error_path
-    assert_equal(flash[:alert], "You need a valid registration token and UID.")
+    assert_equal("You need a valid registration token and UID.", flash[:alert])
   end
 
   test "should succeed with valid params" do
