@@ -6,14 +6,12 @@
 #
 one:
   email: dupa@osiem.com
-  #password: dupa.8
   name: No Elo
   album_no: 123456
   uid: = 'deadbeef'
 
 two:
   email: dupa@siedem.com
-  #password: dupa.7
   name: xD
   uid: deadbee
   admin: true

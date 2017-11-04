@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class EntryAddingTest < ActionDispatch::IntegrationTest
-  include Devise::Test::IntegrationHelpers
   setup do
     @entry = entries(:one)
     @user = users(:one)
