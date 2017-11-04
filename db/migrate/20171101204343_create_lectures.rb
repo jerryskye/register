@@ -10,7 +10,7 @@ class CreateLectures < ActiveRecord::Migration[5.1]
     end
 
     change_table :entries do |t|
-      t.references :lecture, foreign_key: true, null: false
+      t.references :lecture, foreign_key: true
     end
   end
 end

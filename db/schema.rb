@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20171101204343) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "lecture_id", null: false
+    t.bigint "lecture_id"
     t.index ["lecture_id"], name: "index_entries_on_lecture_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 20171101204343) do
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["uid"], name: "index_users_on_uid", unique: true
   end
 
   add_foreign_key "entries", "lectures"

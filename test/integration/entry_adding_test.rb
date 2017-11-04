@@ -2,8 +2,8 @@ require 'test_helper'
 
 class EntryAddingTest < ActionDispatch::IntegrationTest
   setup do
-    @entry = entries(:one)
-    @user = users(:one)
+    @entry = create(:entry)
+    @user = create(:user)
   end
 
   test "should ask the user to login for index" do
@@ -20,10 +20,9 @@ class EntryAddingTest < ActionDispatch::IntegrationTest
     assert_difference('Entry.count') do
       salt = SecureRandom.hex(10)
       hash = Digest::SHA256.hexdigest(Rails.application.secrets[:secret_key_base] + salt)
-      post entries_url, as: :json, params: { entry: { }, uid: @user.uid, salt: salt, hash: hash }
+      post entries_url, as: :json, params: { uid: @user.uid, salt: salt, hash: hash }
+      assert_response :created
     end
-
-    assert_response :created
   end
 
   test "should get index for a logged in user" do

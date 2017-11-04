@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UserAddingTest < ActionDispatch::IntegrationTest
   setup do
-    @user_token = registration_tokens(:one)
+    @user_token = create(:registration_token)
   end
 
   test "should show error for no params" do
