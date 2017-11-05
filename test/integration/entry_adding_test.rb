@@ -31,10 +31,15 @@ class EntryAddingTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get show for a logged in user" do
+  test "should forbid the access for show if user is not the owner of the entry" do
     sign_in @user
+    get entry_url(@entry)
+    assert_response :forbidden
+  end
+
+  test "should get show for the owner of the entry" do
+    sign_in @entry.user
     get entry_url(@entry)
     assert_response :success
   end
-
 end

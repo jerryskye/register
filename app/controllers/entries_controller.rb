@@ -6,13 +6,14 @@ class EntriesController < ApplicationController
   # GET /entries
   # GET /entries.json
   def index
-    @entries = Entry.all
+    @entries = current_user.entries
   end
 
   # GET /entries/1
   # GET /entries/1.json
   def show
     @entry = Entry.find(params[:id])
+    render(status: :forbidden) unless @entry.user == current_user
   end
 
   # POST /entries.json
@@ -39,6 +40,6 @@ class EntriesController < ApplicationController
       if params.has_key?(:salt) and params.has_key?(:hash) and params.has_key?(:uid)
         return if Digest::SHA256.hexdigest(Rails.application.secrets[:secret_key_base] + params[:salt]) == params[:hash]
       end
-      render(json: "You didn't say the magic word!", status: :unauthorized)
+      render(json: "You didn't say the magic word!", status: :forbidden)
     end
 end
