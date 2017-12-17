@@ -1,0 +1,23 @@
+%p#notice= notice
+
+%h1 Listing lectures
+
+%table
+  %thead
+    %tr
+      %th Subject
+      %th Began at
+      %th Ended at
+      %th
+      %th
+
+  %tbody
+    - @lectures.each do |lecture|
+      %tr
+        %td= lecture.subject
+        %td= lecture.dtstart
+        %td= lecture.dtstop
+        %td= link_to 'Show', lecture
+        %td= link_to 'Edit', edit_lecture_url(lecture)
+
+%br

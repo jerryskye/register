@@ -5,7 +5,7 @@ class Entry < ApplicationRecord
   before_create do |entry|
     if entry.user.admin?
       entry.lecture = entry.user.lectures.in_progress.take
-      if lecture.nil?
+      if entry.lecture.nil?
         entry.lecture = Lecture.create(dtstart: Time.zone.now, dtstop: 90.minutes.from_now, user: entry.user)
       else
         entry.lecture.update(dtstop: Time.zone.now)

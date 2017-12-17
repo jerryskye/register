@@ -1,0 +1,15 @@
+= form_for @lecture do |f|
+  - if @lecture.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@lecture.errors.count, "error")} prohibited this lecture from being saved:"
+      %ul
+        - @lecture.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :subject
+    = f.text_field :subject
+    = f.label :dtstop
+    = f.datetime_field :dtstop
+  .actions
+    = f.submit 'Save'
