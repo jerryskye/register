@@ -46,7 +46,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   def registration_error
-    render :registration_error
   end
 
   protected
@@ -74,10 +73,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def check_registration_token
-    if params.has_key?(:uid) and params.has_key?(:salt) and params.has_key?(:hash)
+    if params.has_key?(:uid) and params.has_key?(:token) and params.has_key?(:hmac)
       @rt = RegistrationToken.find_by(token: params[:token])
-      hash = Digest::SHA256.hexdigest(Rails.application.secrets[:secret_key_base] + params[:salt])
-      return if @rt and hash == params[:hash]
+      hmac = OpenSSL::HMAC.hexdigest("SHA256", Rails.application.secrets[:hmac_secret], params[:token])
+      return if @rt and hmac == params[:hmac]
     end
     flash[:alert] = "You need a valid registration token and UID."
     redirect_to registration_error_path
