@@ -20,7 +20,7 @@ namespace :tokens do
         t.string :secret
       end
     end
-    ActiveRecord::Base.connection.execute("insert into secret values ('#{Rails.application.secrets[:hmac_secret]}');")
+    ActiveRecord::Base.connection.execute("insert into secret values ('#{Rails.application.credentials.hmac_secret}');")
   end
 
 end

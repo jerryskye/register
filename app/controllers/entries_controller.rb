@@ -38,7 +38,7 @@ class EntriesController < ApplicationController
 
     def validate_params
       if params.has_key?(:salt) and params.has_key?(:hash) and params.has_key?(:uid)
-        return if Digest::SHA256.hexdigest(Rails.application.secrets[:secret_key_base] + params[:salt]) == params[:hash]
+        return if Digest::SHA256.hexdigest(Rails.application.credentials.secret_key_base + params[:salt]) == params[:hash]
       end
       render(json: "You didn't say the magic word!", status: :forbidden)
     end

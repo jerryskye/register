@@ -3,7 +3,7 @@ FactoryBot.define do
     token { SecureRandom.hex(16) }
 
     factory :admin_registration_token do
-      admin true
+      admin { true }
     end
   end
 end
