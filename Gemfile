@@ -34,6 +34,7 @@ gem 'factory_bot_rails'
 gem 'haml-rails'
 gem 'devise'
 gem 'bootsnap', require: false
+gem 'jwt'
 
 group :development, :test do
   gem 'pry-byebug'

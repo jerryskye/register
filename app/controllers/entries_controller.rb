@@ -1,7 +1,7 @@
 class EntriesController < ApplicationController
   protect_from_forgery with: :null_session, only: [:create]
   before_action :authenticate_user!, only: [:index, :show]
-  before_action :validate_params, only: [:create]
+  before_action :validate_jwt, only: [:create]
 
   # GET /entries
   # GET /entries.json
@@ -12,13 +12,13 @@ class EntriesController < ApplicationController
   # GET /entries/1
   # GET /entries/1.json
   def show
-    @entry = Entry.find(params[:id])
+    @entry = Entry.find(params.require(:id))
     render(status: :forbidden) unless @entry.user == current_user
   end
 
   # POST /entries.json
   def create
-    @user = User.find_by(uid: params[:uid])
+    @user = User.find_by(uid: params.require(:uid))
     @entry = Entry.new(user: @user)
 
     respond_to do |format|
@@ -31,15 +31,14 @@ class EntriesController < ApplicationController
   end
 
   private
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def entry_params
-      params.require(:entry).permit(:uid)
-    end
 
-    def validate_params
-      if params.has_key?(:salt) and params.has_key?(:hash) and params.has_key?(:uid)
-        return if Digest::SHA256.hexdigest(Rails.application.credentials.secret_key_base + params[:salt]) == params[:hash]
+  def validate_jwt
+    authenticate_or_request_with_http_token do |token, options|
+      begin
+        JWT.decode(token, Rails.application.credentials.hmac_secret, true, { algorithm: 'HS256' })
+      rescue JWT::DecodeError
+        render(plain: "You didn't say the magic word!", status: :unauthorized)
       end
-      render(json: "You didn't say the magic word!", status: :forbidden)
     end
+  end
 end

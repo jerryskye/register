@@ -73,11 +73,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   private
 
   def check_registration_token
-    if params.has_key?(:uid) and params.has_key?(:token) and params.has_key?(:hmac)
-      @rt = RegistrationToken.find_by(token: params[:token])
-      hmac = OpenSSL::HMAC.hexdigest("SHA256", Rails.application.credentials.hmac_secret, params[:token])
-      return if @rt and hmac == params[:hmac]
-    end
+    token = params.require(:token)
+    @rt = RegistrationToken.find_by(token: token)
+    hmac = OpenSSL::HMAC.hexdigest("SHA256", Rails.application.credentials.hmac_secret, token)
+    return if @rt and hmac == params.require(:hmac)
     flash[:alert] = "You need a valid registration token and UID."
     redirect_to registration_error_path
   end
