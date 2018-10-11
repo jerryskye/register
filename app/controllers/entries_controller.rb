@@ -12,8 +12,7 @@ class EntriesController < ApplicationController
   # GET /entries/1
   # GET /entries/1.json
   def show
-    @entry = Entry.find(params.require(:id))
-    render(status: :forbidden) unless @entry.user == current_user
+    @entry = current_user.entries.find(params.require(:id))
   end
 
   # POST /entries.json
@@ -21,12 +20,10 @@ class EntriesController < ApplicationController
     @user = User.find_by(uid: params.require(:uid))
     @entry = Entry.new(user: @user)
 
-    respond_to do |format|
-      if @entry.save
-        format.json { render :show, status: :created, location: @entry }
-      else
-        format.json { render json: @entry.errors, status: :unprocessable_entity }
-      end
+    if @entry.save
+      render json: @entry, status: :created
+    else
+      render json: @entry.errors, status: :unprocessable_entity
     end
   end
 
