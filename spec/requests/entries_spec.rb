@@ -24,6 +24,12 @@ RSpec.describe 'Entries', type: :request do
     it 'creates an entry' do
       expect{ subject }.to change { Entry.count }.by(1)
     end
+
+    it 'responds with created entry data' do
+      fields = [:id, :user_id, :lecture_id]
+      subject
+      expect(JSON.parse(response.body)).to include(Entry.select(fields).last.attributes)
+    end
   end
 
   shared_examples 'invalid credentials' do
@@ -120,10 +126,9 @@ RSpec.describe 'Entries', type: :request do
     context 'for a user not owning the entry' do
       subject { get entry_url(other_entry) }
 
-      it 'responds with 403' do
+      it 'raises ActiveRecord::RecordNotFound' do
         sign_in user
-        subject
-        expect(response).to have_http_status(403)
+        expect{ subject }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
