@@ -1,5 +1,5 @@
 class EntriesController < ApplicationController
-  protect_from_forgery with: :null_session, only: [:create]
+  skip_forgery_protection only: [:create]
   before_action :authenticate_user!, only: [:index, :show]
   before_action :validate_jwt, only: [:create]
 
