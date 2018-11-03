@@ -1,3 +1,4 @@
-%h2 Edit lecture
+.pb-2.mt-4.mb-2.border-bottom
+  %h2 Editing lecture
 = render 'form'
-= link_to 'Cancel', lecture_path(@lecture)
+= link_to 'Cancel', @lecture, class: 'btn btn-danger'

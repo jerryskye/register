@@ -1,15 +1,15 @@
 = form_for @lecture do |f|
   - if @lecture.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@lecture.errors.count, "error")} prohibited this lecture from being saved:"
-      %ul
-        - @lecture.errors.full_messages.each do |message|
-          %li= message
-
-  .field
-    = f.label :subject
-    = f.text_field :subject
-    = f.label :dtstop
-    = f.datetime_field :dtstop
-  .actions
-    = f.submit 'Save'
+    - @lecture.errors.full_messages.each do |message|
+      .alert.alert-danger= message
+  .form-group.row
+    = f.label :subject, class: 'col-sm-2 col-form-label'
+    .col-sm-6
+      = f.text_field :subject, class: 'form-control'
+  .form-group.row
+    = f.label :dtstop, class: 'col-sm-2 col-form-label'
+    .col-sm-6
+      = f.datetime_field :dtend, class: 'form-control'
+  .form-group.row
+    .col-sm-6
+      = f.submit "Save", class: 'btn btn-primary'

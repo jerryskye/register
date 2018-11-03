@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   # GET /entries
   # GET /entries.json
   def index
-    @entries = current_user.entries
+    @entries = current_user.entries.includes(:lecture)
   end
 
   # GET /entries/1
