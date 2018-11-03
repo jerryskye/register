@@ -6,9 +6,9 @@ class Entry < ApplicationRecord
     if entry.user.admin?
       entry.lecture = entry.user.lectures.in_progress.take
       if entry.lecture.nil?
-        entry.lecture = Lecture.create(dtstart: Time.current, dtstop: 90.minutes.from_now, user: entry.user)
+        entry.lecture = Lecture.create(dtstart: Time.current, dtend: 90.minutes.from_now, user: entry.user)
       else
-        entry.lecture.update(dtstop: Time.current)
+        entry.lecture.update(dtend: Time.current)
       end
     else
       entry.lecture = Lecture.in_progress.take

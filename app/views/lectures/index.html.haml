@@ -1,23 +1,18 @@
-%p#notice= notice
+.pb-2.mt-4.mb-2
+  %h2 Listing lectures
 
-%h1 Listing lectures
-
-%table
+%table.table.table-hover
   %thead
     %tr
       %th Subject
       %th Began at
       %th Ended at
-      %th
-      %th
+      %th Info
 
   %tbody
     - @lectures.each do |lecture|
       %tr
         %td= lecture.subject
         %td= lecture.dtstart
-        %td= lecture.dtstop
-        %td= link_to 'Show', lecture
-        %td= link_to 'Edit', edit_lecture_url(lecture)
-
-%br
+        %td= lecture.dtend
+        %td= link_to 'Show', lecture, class: 'btn btn-primary btn-sm'

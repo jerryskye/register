@@ -1,10 +1,13 @@
-%p#notice= notice
-
-%p
-  %b User:
-  = @entry.user
-%p
-  %b Created at:
-  = @entry.created_at
-
-= link_to 'Back', entries_path
+.card
+  .card-body
+    %h3.card-title= @entry.lecture.subject
+    %h4.card-subtitle.text-muted= @entry.lecture.dtstart.strftime('%d-%m-%Y %H:%M-') + @entry.lecture.dtend.strftime('%H:%M')
+  %ul.list-group.list-group-flush
+    %li.list-group-item
+      %strong Lecturer:
+      = @entry.lecture.user.name
+    %li.list-group-item
+      %strong Clocked in at
+      = @entry.created_at.strftime('%H:%M')
+  .card-header
+    = link_to 'All entries', entries_path, class: 'btn btn-primary btn-sm'

@@ -89,8 +89,8 @@ RSpec.describe 'Entries', type: :request do
             Timecop.return
           end
 
-          it 'concludes it by updating dtstop' do
-            expect { subject }.to change { lecture.reload.dtstop }.from(lecture.dtstart + 90.minutes).to(Time.current)
+          it 'concludes it by updating dtend' do
+            expect { subject }.to change { lecture.reload.dtend }.from(lecture.dtstart + 90.minutes).to(Time.current)
           end
         end
       end

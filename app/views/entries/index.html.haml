@@ -1,19 +1,16 @@
-%p#notice= notice
+.pb-2.mt-4.mb-2
+  %h2 Listing entries
 
-%h1 Listing entries
-
-%table
+%table.table.table-hover
   %thead
     %tr
-      %th User
+      %th Lecture
       %th Created at
-      %th
+      %th Info
 
   %tbody
     - @entries.each do |entry|
       %tr
-        %td= entry.user
+        %td= entry.lecture&.subject
         %td= entry.created_at
-        %td= link_to 'Show', entry
-
-%br
+        %td= link_to 'Show', entry, class: 'btn btn-primary btn-sm'
