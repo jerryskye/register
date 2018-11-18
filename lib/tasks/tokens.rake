@@ -1,7 +1,7 @@
 namespace :tokens do
   desc "Generate a 100 tokens"
-  task create_tokens: :environment do
-    FactoryBot.create_list("registration_token", 100)
+  task generate: :environment do
+    FactoryBot.create_list(:registration_token, 100)
   end
 
   desc "Create an SQLite db with the token data"
@@ -22,5 +22,4 @@ namespace :tokens do
     end
     ActiveRecord::Base.connection.execute("insert into secret values ('#{Rails.application.credentials.hmac_secret}');")
   end
-
 end
