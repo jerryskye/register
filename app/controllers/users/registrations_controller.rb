@@ -6,17 +6,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # GET /resource/sign_up
   def new
     session[:token_id] = @rt.id
-    @uid = params[:uid]
+    session[:uid] = params.require(:uid)
+    session[:admin] = @rt.admin?
     super
   end
 
   # POST /resource
   def create
-    @rt = RegistrationToken.find(session[:token_id])
     super do |user|
       if user.persisted?
-        session.delete(:token_id)
-        @rt.destroy
+        RegistrationToken.delete(session.delete(:token_id))
+        session.delete(:uid)
+        session.delete(:admin)
       end
     end
   end

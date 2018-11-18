@@ -1,7 +1,9 @@
 .pb-2.mt-4.mb-2.border-bottom
   %h2 Sign up
 = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-  = f.hidden_field :uid, value: @uid
+  - if resource.errors.any?
+    - resource.errors.full_messages.each do |message|
+      .alert.alert-danger= message
   .form-group.row
     = f.label :email, class: 'col-sm-3 col-form-label'
     .col-sm-5
@@ -15,11 +17,11 @@
     = f.label :password_confirmation, class: 'col-sm-3 col-form-label'
     .col-sm-5
       = f.password_field :password_confirmation, autocomplete: "off", class: 'form-control'
+  .form-group.row
+    = f.label :name, class: 'col-sm-3 col-form-label'
+    .col-sm-5
+      = f.text_field :name, class: 'form-control'
   - unless @rt.admin?
-    .form-group.row
-      = f.label :name, class: 'col-sm-3 col-form-label'
-      .col-sm-5
-        = f.text_field :name, class: 'form-control'
     .form-group.row
       = f.label :album_no, class: 'col-sm-3 col-form-label'
       .col-sm-5
