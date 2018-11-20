@@ -33,6 +33,7 @@ gem 'haml-rails'
 gem 'devise'
 gem 'bootsnap', require: false
 gem 'jwt'
+gem 'dry-monads'
 
 group :development, :test do
   gem 'pry-byebug'
@@ -46,7 +47,6 @@ group :test do
   gem 'selenium-webdriver'
   gem 'chromedriver-helper'
   gem 'shoulda-matchers', '~> 3.1'
-  gem 'timecop'
 end
 
 group :development do
