@@ -18,12 +18,17 @@ class EntriesController < ApplicationController
   # POST /entries.json
   def create
     @user = User.find_by(uid: params.require(:uid))
-    @entry = Entry.new(user: @user)
 
-    if @entry.save
-      render json: @entry, status: :created
+    result = if @user.admin?
+               AddLecture.call(@user)
+             else
+               AddEntry.call(@user)
+             end
+
+    if result.success?
+      render json: result.success, status: :created
     else
-      render json: @entry.errors, status: :unprocessable_entity
+      render json: result.failure, status: :unprocessable_entity
     end
   end
 

@@ -15,23 +15,6 @@ RSpec.describe 'Entries', type: :request do
     end
   end
 
-  shared_examples 'entry adding' do
-    it 'responds with 201' do
-      subject
-      expect(response).to have_http_status(201)
-    end
-
-    it 'creates an entry' do
-      expect{ subject }.to change { Entry.count }.by(1)
-    end
-
-    it 'responds with created entry data' do
-      fields = [:id, :user_id, :lecture_id]
-      subject
-      expect(JSON.parse(response.body)).to include(Entry.select(fields).last.attributes)
-    end
-  end
-
   shared_examples 'invalid credentials' do
     it 'responds with 401' do
       subject
@@ -63,34 +46,92 @@ RSpec.describe 'Entries', type: :request do
     let(:error_response_body) { "You didn't say the magic word!" }
 
     context 'with correct token' do
-      let!(:lecture) { create(:lecture) }
+      let(:some_successful_result) { double(success?: true, success: 'hello') }
+      context 'for student card' do
+        it 'runs the AddEntry service' do
+          expect(AddEntry).to receive(:call).with(user).and_return(some_successful_result)
+          subject
+        end
 
-      include_examples 'entry adding'
+        context 'for successful result' do
+          let!(:entry) { create(:entry, user: user) }
+          let(:successful_result) { double(success?: true, success: entry) }
+          before do
+            allow(AddEntry).to receive(:call).with(user).and_return(successful_result)
+          end
 
-      it 'adds the entry to the lecture' do
-        expect { subject }.to change { lecture.entries.count }.by(1)
+          it 'responds with 201' do
+            subject
+            expect(response).to have_http_status(201)
+          end
+
+          it 'responds with created entry data' do
+            subject
+            expect(response.body).to eq(entry.to_json)
+          end
+        end
+
+        context 'for failure result' do
+          let(:errors) { { errors: { some_field: ['some error'] } } }
+          let(:failure_result) { double(success?: false, failure: errors) }
+          before do
+            allow(AddEntry).to receive(:call).with(user).and_return(failure_result)
+          end
+
+          it 'responds with 422' do
+            subject
+            expect(response).to have_http_status(422)
+          end
+
+          it 'responds with error data' do
+            subject
+            expect(response.body).to eq('{"errors":{"some_field":["some error"]}}')
+          end
+        end
       end
 
       context 'for an admin user' do
+        let!(:lecture) { create(:lecture, user: user) }
         let!(:user) { create(:admin) }
 
-        include_examples 'entry adding'
-
-        it 'creates a lecture' do
-          expect { subject }.to change { Lecture.count }.by(1)
+        it 'runs the AddLecture service' do
+          expect(AddLecture).to receive(:call).with(user).and_return(some_successful_result)
+          subject
         end
 
-        context 'for a pre-created lecture' do
-          let!(:lecture) { create(:lecture, user: user) }
-
-          around do |example|
-            Timecop.freeze(Time.current.round)
-            example.run
-            Timecop.return
+        context 'for successful result' do
+          let(:lecture) { create(:lecture, user: user) }
+          let(:successful_result) { double(success?: true, success: lecture) }
+          before do
+            allow(AddLecture).to receive(:call).with(user).and_return(successful_result)
           end
 
-          it 'concludes it by updating dtend' do
-            expect { subject }.to change { lecture.reload.dtend }.from(lecture.dtstart + 90.minutes).to(Time.current)
+          it 'responds with 201' do
+            subject
+            expect(response).to have_http_status(201)
+          end
+
+          it 'responds with created lecture data' do
+            subject
+            expect(response.body).to eq(lecture.to_json)
+          end
+        end
+
+        context 'for failure result' do
+          let(:errors) { { errors: { some_field: ['some error'] } } }
+          let(:failure_result) { double(success?: false, failure: errors) }
+          before do
+            allow(AddLecture).to receive(:call).with(user).and_return(failure_result)
+          end
+
+          it 'responds with 422' do
+            subject
+            expect(response).to have_http_status(422)
+          end
+
+          it 'responds with error data' do
+            subject
+            expect(response.body).to eq('{"errors":{"some_field":["some error"]}}')
           end
         end
       end
