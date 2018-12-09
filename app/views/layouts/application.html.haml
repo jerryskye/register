@@ -15,6 +15,7 @@
               = link_to 'Entries', entries_path, class: 'nav-item nav-link'
               - if current_user.admin?
                 = link_to 'Lectures', lectures_path, class: 'nav-item nav-link'
+              = link_to 'Edit your info', edit_user_registration_path, class: 'nav-item nav-link'
               = link_to 'Log out', destroy_user_session_path, method: :delete, class: 'nav-item btn btn-outline-danger'
             - else
               = link_to 'Log in', new_user_session_path, class: 'nav-item nav-link active'

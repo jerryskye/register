@@ -9,10 +9,9 @@
     .col-sm-5
       = f.email_field :email, autofocus: true, class: 'form-control'
   .form-group.row
-    .col-sm-3
-      = f.label :password
+    = f.label :password, class: 'col-sm-3 col-form-label'
     .col-sm-5
-      = f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: "#{@minimum_password_length} characters minimum" || ''
+      = f.password_field :password, autocomplete: "off", class: 'form-control', placeholder: "#{@minimum_password_length} characters minimum"
   .form-group.row
     = f.label :password_confirmation, class: 'col-sm-3 col-form-label'
     .col-sm-5
@@ -21,12 +20,11 @@
     = f.label :name, class: 'col-sm-3 col-form-label'
     .col-sm-5
       = f.text_field :name, class: 'form-control'
-  - unless @rt.admin?
+  - unless session[:admin]
     .form-group.row
       = f.label :album_no, class: 'col-sm-3 col-form-label'
       .col-sm-5
         = f.text_field :album_no, class: 'form-control'
   .form-group.row
     .col-sm-5
-      = f.submit "Sign up", class: 'btn btn-primary'
-= render "devise/shared/links"
+      = f.submit 'Sign up', class: 'btn btn-primary'
