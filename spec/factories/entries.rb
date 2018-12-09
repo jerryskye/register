@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :entry do
-    user
+    uid { Faker::Crypto.sha256 }
     lecture
   end
 end

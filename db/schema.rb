@@ -16,12 +16,12 @@ ActiveRecord::Schema.define(version: 2018_11_03_204153) do
   enable_extension "plpgsql"
 
   create_table "entries", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.string "uid", limit: 64, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "lecture_id"
     t.index ["lecture_id"], name: "index_entries_on_lecture_id"
-    t.index ["user_id"], name: "index_entries_on_user_id"
+    t.index ["uid"], name: "index_entries_on_uid"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -60,6 +60,5 @@ ActiveRecord::Schema.define(version: 2018_11_03_204153) do
   end
 
   add_foreign_key "entries", "lectures"
-  add_foreign_key "entries", "users"
   add_foreign_key "lectures", "users"
 end

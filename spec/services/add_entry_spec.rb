@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AddEntry do
-  subject { described_class.call(user) }
+  subject { described_class.call(uid) }
   let!(:user) { create(:user) }
+  let(:uid) { user.uid }
 
   shared_examples 'entry adding' do
     it 'creates the entry' do
@@ -28,6 +29,7 @@ RSpec.describe AddEntry do
 
   context 'for a lecture in progress' do
     let!(:lecture) { create(:lecture) }
+
     include_examples 'entry adding'
 
     it 'adds an entry to the lecture' do
@@ -35,9 +37,15 @@ RSpec.describe AddEntry do
     end
   end
 
+  context 'for a non-registered user' do
+    let(:uid) { Faker::Crypto.sha256 }
+
+    include_examples 'entry adding'
+  end
+
   context 'for a failure' do
-    context 'for a nil user' do
-      let!(:user) { nil }
+    context 'for a nil uid' do
+      let(:uid) { nil }
 
       it 'returns a failure result' do
         expect(subject).to be_failure

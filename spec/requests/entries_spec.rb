@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Entries', type: :request do
   let!(:user) { create(:user) }
+  let(:uid) { user.uid }
 
   shared_examples 'require login' do
     it 'redirects a non-logged in user to login page' do
@@ -38,7 +39,7 @@ RSpec.describe 'Entries', type: :request do
   end
 
   describe 'POST /entries.json' do
-    subject { post entries_url, as: :json, headers: headers, params: { uid: user.uid } }
+    subject { post entries_url, as: :json, headers: headers, params: { uid: uid } }
     let(:headers) { { 'Authorization' => "Bearer #{jwt_token}" } }
     let(:jwt_token) { JWT.encode(jwt_payload, jwt_secret, 'HS256') }
     let(:jwt_payload) { { exp: 5.seconds.from_now.to_i } }
@@ -49,15 +50,15 @@ RSpec.describe 'Entries', type: :request do
       let(:some_successful_result) { double(success?: true, success: 'hello') }
       context 'for student card' do
         it 'runs the AddEntry service' do
-          expect(AddEntry).to receive(:call).with(user).and_return(some_successful_result)
+          expect(AddEntry).to receive(:call).with(uid).and_return(some_successful_result)
           subject
         end
 
         context 'for successful result' do
-          let!(:entry) { create(:entry, user: user) }
+          let!(:entry) { create(:entry, uid: uid) }
           let(:successful_result) { double(success?: true, success: entry) }
           before do
-            allow(AddEntry).to receive(:call).with(user).and_return(successful_result)
+            allow(AddEntry).to receive(:call).with(uid).and_return(successful_result)
           end
 
           it 'responds with 201' do
@@ -75,7 +76,7 @@ RSpec.describe 'Entries', type: :request do
           let(:errors) { { errors: { some_field: ['some error'] } } }
           let(:failure_result) { double(success?: false, failure: errors) }
           before do
-            allow(AddEntry).to receive(:call).with(user).and_return(failure_result)
+            allow(AddEntry).to receive(:call).with(uid).and_return(failure_result)
           end
 
           it 'responds with 422' do
@@ -158,7 +159,7 @@ RSpec.describe 'Entries', type: :request do
   end
 
   describe 'GET /entries/:id' do
-    let!(:my_entry) { create(:entry, user: user) }
+    let!(:my_entry) { create(:entry, uid: uid) }
     let!(:other_entry) { create(:entry) }
     subject { get entry_url(my_entry) }
 

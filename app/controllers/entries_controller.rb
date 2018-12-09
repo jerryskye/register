@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   # GET /entries
   # GET /entries.json
   def index
-    @entries = current_user.entries.joins(:lecture).includes(:lecture)
+    @entries = current_user.entries.left_joins(:lecture).includes(:lecture)
   end
 
   # GET /entries/1
@@ -17,12 +17,13 @@ class EntriesController < ApplicationController
 
   # POST /entries.json
   def create
-    @user = User.find_by(uid: params.require(:uid))
+    uid = params.require(:uid)
+    @user = User.find_by(uid: uid)
 
-    result = if @user.admin?
+    result = if @user&.admin?
                AddLecture.call(@user)
              else
-               AddEntry.call(@user)
+               AddEntry.call(uid)
              end
 
     if result.success?

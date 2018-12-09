@@ -1,13 +1,10 @@
 FactoryBot.define do
   factory :user do
-    transient do
-      random_uid  { SecureRandom.hex(4) }
-    end
-    email { Faker::Internet.email(random_uid) }
+    email { Faker::Internet.email }
     password { "password" }
     name { Faker::Name.name }
     album_no { Faker::Number.number(6) }
-    uid { Digest::SHA256.hexdigest(random_uid) }
+    uid { Faker::Crypto.sha256 }
 
     factory :admin do
       admin { true }
