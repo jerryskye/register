@@ -1,11 +1,13 @@
 .card
-  .card-body
-    %h3.card-title= @entry.lecture.subject
-    %h4.card-subtitle.text-muted= @entry.lecture.dtstart.strftime('%d-%m-%Y %H:%M-') + @entry.lecture.dtend.strftime('%H:%M')
+  - if @lecture.lecture?
+    .card-body
+      %h3.card-title= @lecture.subject
+      %h4.card-subtitle.text-muted= @lecture.timeframe
   %ul.list-group.list-group-flush
-    %li.list-group-item
-      %strong Lecturer:
-      = @entry.lecture.user.name
+    - if @lecture.lecture?
+      %li.list-group-item
+        %strong Lecturer:
+        = @lecture.lecturer
     %li.list-group-item
       %strong Clocked in at
       = @entry.created_at.strftime('%H:%M')
