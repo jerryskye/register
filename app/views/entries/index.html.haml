@@ -11,6 +11,6 @@
   %tbody
     - @entries.each do |entry|
       %tr
-        %td= entry.lecture&.subject
+        %td= entry.lecture&.subject || 'No lecture created'
         %td= entry.created_at
         %td= link_to 'Show', entry, class: 'btn btn-primary btn-sm'

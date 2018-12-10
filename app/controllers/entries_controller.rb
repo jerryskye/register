@@ -13,6 +13,7 @@ class EntriesController < ApplicationController
   # GET /entries/1.json
   def show
     @entry = current_user.entries.find(params.require(:id))
+    @lecture = LectureViewObject.new(@entry.lecture)
   end
 
   # POST /entries.json

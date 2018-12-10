@@ -7,6 +7,7 @@ class LecturesController < ApplicationController
   end
 
   def show
+    @lecture_view_object = LectureViewObject.new(@lecture)
   end
 
   def edit
