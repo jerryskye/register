@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 2018_11_03_204153) do
 
   create_table "entries", force: :cascade do |t|
     t.string "uid", limit: 64, null: false
+    t.string "device_id", limit: 64, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "lecture_id"
@@ -26,11 +27,13 @@ ActiveRecord::Schema.define(version: 2018_11_03_204153) do
 
   create_table "lectures", force: :cascade do |t|
     t.string "subject"
+    t.string "device_id", limit: 64, null: false
     t.datetime "dtstart", null: false
     t.datetime "dtend"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["device_id"], name: "index_lectures_on_device_id"
     t.index ["user_id"], name: "index_lectures_on_user_id"
   end
 

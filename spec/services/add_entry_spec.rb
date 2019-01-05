@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AddEntry do
-  subject { described_class.call(uid) }
+  subject { described_class.call(uid, device_id) }
   let!(:user) { create(:user) }
   let(:uid) { user.uid }
+  let(:device_id) { 'device-id' }
 
   shared_examples 'entry adding' do
     it 'creates the entry' do
@@ -16,6 +17,7 @@ RSpec.describe AddEntry do
 
     it 'returns a wrapped entry object' do
       expect(subject.success).to be_instance_of(Entry)
+      expect(subject.success).to have_attributes(uid: uid, device_id: device_id)
     end
   end
 
@@ -28,7 +30,7 @@ RSpec.describe AddEntry do
   end
 
   context 'for a lecture in progress' do
-    let!(:lecture) { create(:lecture) }
+    let!(:lecture) { create(:lecture, device_id: device_id) }
 
     include_examples 'entry adding'
 

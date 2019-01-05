@@ -42,15 +42,17 @@ RSpec.describe 'Entries', type: :request do
     subject { post entries_url, as: :json, headers: headers, params: { uid: uid } }
     let(:headers) { { 'Authorization' => "Bearer #{jwt_token}" } }
     let(:jwt_token) { JWT.encode(jwt_payload, jwt_secret, 'HS256') }
-    let(:jwt_payload) { { exp: 5.seconds.from_now.to_i } }
+    let(:jwt_payload) { { exp: exp, device_id: device_id } }
     let(:jwt_secret) { Rails.application.credentials.hmac_secret }
+    let(:exp) { 5.seconds.from_now.to_i }
+    let(:device_id) { 'device-id' }
     let(:error_response_body) { "You didn't say the magic word!" }
 
     context 'with correct token' do
       let(:some_successful_result) { double(success?: true, success: 'hello') }
       context 'for student card' do
         it 'runs the AddEntry service' do
-          expect(AddEntry).to receive(:call).with(uid).and_return(some_successful_result)
+          expect(AddEntry).to receive(:call).with(uid, device_id).and_return(some_successful_result)
           subject
         end
 
@@ -58,7 +60,7 @@ RSpec.describe 'Entries', type: :request do
           let!(:entry) { create(:entry, uid: uid) }
           let(:successful_result) { double(success?: true, success: entry) }
           before do
-            allow(AddEntry).to receive(:call).with(uid).and_return(successful_result)
+            allow(AddEntry).to receive(:call).with(uid, device_id).and_return(successful_result)
           end
 
           it 'responds with 201' do
@@ -76,7 +78,7 @@ RSpec.describe 'Entries', type: :request do
           let(:errors) { { errors: { some_field: ['some error'] } } }
           let(:failure_result) { double(success?: false, failure: errors) }
           before do
-            allow(AddEntry).to receive(:call).with(uid).and_return(failure_result)
+            allow(AddEntry).to receive(:call).with(uid, device_id).and_return(failure_result)
           end
 
           it 'responds with 422' do
@@ -96,7 +98,7 @@ RSpec.describe 'Entries', type: :request do
         let!(:user) { create(:admin) }
 
         it 'runs the AddLecture service' do
-          expect(AddLecture).to receive(:call).with(user).and_return(some_successful_result)
+          expect(AddLecture).to receive(:call).with(user, device_id).and_return(some_successful_result)
           subject
         end
 
@@ -104,7 +106,7 @@ RSpec.describe 'Entries', type: :request do
           let(:lecture) { create(:lecture, user: user) }
           let(:successful_result) { double(success?: true, success: lecture) }
           before do
-            allow(AddLecture).to receive(:call).with(user).and_return(successful_result)
+            allow(AddLecture).to receive(:call).with(user, device_id).and_return(successful_result)
           end
 
           it 'responds with 201' do
@@ -122,7 +124,7 @@ RSpec.describe 'Entries', type: :request do
           let(:errors) { { errors: { some_field: ['some error'] } } }
           let(:failure_result) { double(success?: false, failure: errors) }
           before do
-            allow(AddLecture).to receive(:call).with(user).and_return(failure_result)
+            allow(AddLecture).to receive(:call).with(user, device_id).and_return(failure_result)
           end
 
           it 'responds with 422' do
@@ -152,7 +154,13 @@ RSpec.describe 'Entries', type: :request do
     end
 
     context 'with expired token ' do
-      let(:jwt_payload) { { exp: 5.seconds.ago.to_i } }
+      let(:exp) { 5.seconds.ago.to_i }
+
+      include_examples 'invalid credentials'
+    end
+
+    context 'with no device_id' do
+      let(:jwt_payload) { { exp: exp } }
 
       include_examples 'invalid credentials'
     end

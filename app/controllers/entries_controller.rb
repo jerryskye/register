@@ -21,9 +21,9 @@ class EntriesController < ApplicationController
     @user = User.find_by(uid: uid)
 
     result = if @user&.admin?
-               AddLecture.call(@user)
+               AddLecture.call(@user, @device_id)
              else
-               AddEntry.call(uid)
+               AddEntry.call(uid, @device_id)
              end
 
     if result.success?
@@ -38,8 +38,13 @@ class EntriesController < ApplicationController
   def validate_jwt
     authenticate_or_request_with_http_token do |token, options|
       begin
-        JWT.decode(token, Rails.application.credentials.hmac_secret, true, { algorithm: 'HS256' })
-      rescue JWT::DecodeError
+        @device_id = JWT.decode(
+          token,
+          Rails.application.credentials.hmac_secret,
+          true,
+          { algorithm: 'HS256' }).
+        first.fetch('device_id')
+      rescue JWT::DecodeError, KeyError
         render(plain: "You didn't say the magic word!", status: :unauthorized)
       end
     end
