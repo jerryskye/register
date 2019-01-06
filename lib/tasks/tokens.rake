@@ -18,8 +18,9 @@ namespace :tokens do
     ActiveRecord::Schema.define do
       create_table(:secret, id: false) do |t|
         t.string :secret
+        t.string :device_id
       end
     end
-    ActiveRecord::Base.connection.execute("insert into secret values ('#{Rails.application.credentials.hmac_secret}');")
+    ActiveRecord::Base.connection.execute("insert into secret values ('#{Rails.application.credentials.hmac_secret}', '#{Faker::Crypto.sha256}');")
   end
 end
