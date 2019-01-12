@@ -8,8 +8,17 @@
 .card
   .card-header
     %h4.card-title Attendance
-  %ul.list-group.list-group-flush
-    - @lecture.entries.each_with_index do |entry, index|
-      %li.list-group-item
-        %strong= "#{index + 1}."
-        = user_string(entry.user)
+  .card-body
+    %table.table.table-hover
+      %thead
+        %tr
+          %th #
+          %th Student
+          %th Clocked in at
+
+      %tbody
+        - @lecture.entries.each_with_index do |entry, index|
+          %tr
+            %th= index + 1
+            %td= user_string(entry.user)
+            %td= entry.created_at.strftime('%H:%M')
