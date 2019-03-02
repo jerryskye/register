@@ -1,9 +1,9 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+  # :recoverable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
-  has_many :lectures
+         :rememberable, :validatable
+  has_many :lectures, dependent: :destroy
   validates :name, presence: true
   validates :uid, presence: true, uniqueness: { message: 'is taken - this card has already been registered!' }, length: { is: 64 }
 
