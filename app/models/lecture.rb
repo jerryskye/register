@@ -3,4 +3,5 @@ class Lecture < ApplicationRecord
   belongs_to :user
   has_many :entries, dependent: :nullify
   validates :dtstart, presence: true
+  validates :device_id, presence: true
 end
