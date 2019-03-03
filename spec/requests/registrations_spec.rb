@@ -40,6 +40,13 @@ RSpec.describe "User registrations", type: :request do
 
         include_examples 'redirect to registration error page'
       end
+
+      context 'with expired token' do
+        let(:exp) { 5.seconds.ago.to_i }
+        let(:alert) { 'This token has expired.' }
+
+        include_examples 'redirect to registration error page'
+      end
     end
 
     context 'with no token' do

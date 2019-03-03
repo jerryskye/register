@@ -69,6 +69,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     payload = JWT.decode(token, Rails.application.credentials.jwt_secret, true, { algorithm: 'HS256' }).first
     session[:uid] = payload.fetch('sub')
     session[:admin] = payload.fetch('admin')
+  rescue JWT::ExpiredSignature
+    flash[:alert] = 'This token has expired.'
+    redirect_to registration_error_path
   rescue JWT::DecodeError, KeyError
     flash[:alert] = 'You need a valid registration token.'
     redirect_to registration_error_path
