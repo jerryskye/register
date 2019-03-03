@@ -1,13 +1,15 @@
 namespace :registration do
   desc "Generate a registration url for a card"
-  task :get_url, [:admin, :uid, :base_url] => :environment do |task, args|
-    raise 'You need to provide admin, uid and base_url as arguments' if args.count != 3
+  task :get_url, [:admin, :uid, :host, :exp] => :environment do |task, args|
+    raise 'You need to provide admin, uid, host and exp as arguments' if args.count != 4
     admin = args[:admin]
     uid = args[:uid]
-    base_url = args[:base_url]
-    rt = FactoryBot.create(:registration_token, admin: admin).token
-    hmac = OpenSSL::HMAC.hexdigest("SHA256", Rails.application.credentials.hmac_secret, rt)
+    host = args[:host]
+    exp = args[:exp]
     include Rails.application.routes.url_helpers
-    puts base_url + new_user_registration_path(uid: uid, hmac: hmac, token: rt)
+    jwt_secret = Rails.application.credentials.jwt_secret
+    jwt_payload = { exp: exp, sub: uid, admin: admin }
+    token = JWT.encode(jwt_payload, jwt_secret, 'HS256')
+    puts new_user_registration_url(host: host, token: token)
   end
 end

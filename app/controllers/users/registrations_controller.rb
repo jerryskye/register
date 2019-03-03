@@ -1,31 +1,17 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
-  before_action :check_registration_token, only: [:new]
+  before_action :validate_jwt, only: [:new]
 
   # GET /resource/sign_up
-  def new
-    session[:token_id] = @rt.id
-    session[:uid] = params.require(:uid)
-    session[:admin] = @rt.admin?
-    if User.exists?(uid: session[:uid])
-      flash[:alert] = 'This card has already been registered!'
-      redirect_to registration_error_path
-    else
-      super
-    end
-  end
+  # def new
+  #   super
+  # end
 
   # POST /resource
-  def create
-    super do |user|
-      if user.persisted?
-        RegistrationToken.delete(session.delete(:token_id))
-        session.delete(:uid)
-        session.delete(:admin)
-      end
-    end
-  end
+  # def create
+  #   super
+  # end
 
   # GET /resource/edit
   # def edit
@@ -78,12 +64,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
-  def check_registration_token
+  def validate_jwt
     token = params.require(:token)
-    @rt = RegistrationToken.find_by(token: token)
-    hmac = OpenSSL::HMAC.hexdigest("SHA256", Rails.application.credentials.jwt_secret, token)
-    return if @rt and hmac == params.require(:hmac)
-    flash[:alert] = "You need a valid registration token and UID."
+    payload = JWT.decode(token, Rails.application.credentials.jwt_secret, true, { algorithm: 'HS256' }).first
+    session[:uid] = payload.fetch('sub')
+    session[:admin] = payload.fetch('admin')
+  rescue JWT::DecodeError, KeyError
+    flash[:alert] = 'You need a valid registration token.'
     redirect_to registration_error_path
   end
 end
