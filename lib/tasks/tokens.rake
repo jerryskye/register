@@ -21,6 +21,6 @@ namespace :tokens do
         t.string :device_id
       end
     end
-    ActiveRecord::Base.connection.execute("insert into secret values ('#{Rails.application.credentials.hmac_secret}', '#{Faker::Crypto.sha256}');")
+    ActiveRecord::Base.connection.execute("insert into secret values ('#{Rails.application.credentials.jwt_secret}', '#{Faker::Crypto.sha256}');")
   end
 end

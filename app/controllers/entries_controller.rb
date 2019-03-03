@@ -41,7 +41,7 @@ class EntriesController < ApplicationController
       begin
         @device_id = JWT.decode(
           token,
-          Rails.application.credentials.hmac_secret,
+          Rails.application.credentials.jwt_secret,
           true,
           { algorithm: 'HS256' }).
         first.fetch('device_id')

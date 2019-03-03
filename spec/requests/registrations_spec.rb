@@ -10,7 +10,7 @@ RSpec.describe "User registrations", type: :request do
     end
 
     context 'with valid params' do
-    let(:hmac) { OpenSSL::HMAC.hexdigest('SHA256', Rails.application.credentials.hmac_secret, token) }
+    let(:hmac) { OpenSSL::HMAC.hexdigest('SHA256', Rails.application.credentials.jwt_secret, token) }
 
       it 'responds with 200' do
         subject

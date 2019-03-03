@@ -43,7 +43,7 @@ RSpec.describe 'Entries', type: :request do
     let(:headers) { { 'Authorization' => "Bearer #{jwt_token}" } }
     let(:jwt_token) { JWT.encode(jwt_payload, jwt_secret, 'HS256') }
     let(:jwt_payload) { { exp: exp, device_id: device_id } }
-    let(:jwt_secret) { Rails.application.credentials.hmac_secret }
+    let(:jwt_secret) { Rails.application.credentials.jwt_secret }
     let(:exp) { 5.seconds.from_now.to_i }
     let(:device_id) { 'device-id' }
     let(:error_response_body) { "You didn't say the magic word!" }
