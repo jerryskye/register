@@ -37,14 +37,6 @@ ActiveRecord::Schema.define(version: 2018_11_03_204153) do
     t.index ["user_id"], name: "index_lectures_on_user_id"
   end
 
-  create_table "registration_tokens", force: :cascade do |t|
-    t.boolean "admin", default: false, null: false
-    t.string "token", limit: 32, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["token"], name: "index_registration_tokens_on_token", unique: true
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
