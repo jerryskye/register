@@ -1,5 +1,6 @@
 require 'dry/monads/result'
 
+# A Base class for all services in the project
 class ApplicationService
   include Dry::Monads::Result::Mixin
 
