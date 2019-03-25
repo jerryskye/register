@@ -37,7 +37,6 @@ gem 'dry-monads'
 group :development, :test do
   gem 'pry-byebug'
   # Adds support for Capybara system testing and selenium driver
-  gem 'pry-rails'
   gem 'rspec-rails', '~> 3.7'
 end
 
