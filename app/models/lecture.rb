@@ -1,3 +1,4 @@
+# Model class for the +lectures+ table
 class Lecture < ApplicationRecord
   scope :in_progress, -> { where("dtend > ?", Time.current) }
   belongs_to :user
