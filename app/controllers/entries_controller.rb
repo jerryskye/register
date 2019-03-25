@@ -1,22 +1,27 @@
+# The controller that handles all requests related to entries
 class EntriesController < ApplicationController
   skip_forgery_protection only: [:create]
   before_action :authenticate_user!, only: [:index, :show]
   before_action :validate_jwt, only: [:create]
 
-  # GET /entries
-  # GET /entries.json
+  # +GET /entries+
+  #
+  # Returns all the entries for the current user
   def index
     @entries = current_user.entries.left_joins(:lecture).includes(:lecture)
   end
 
-  # GET /entries/1
-  # GET /entries/1.json
+  # +GET /entries/:id+
+  #
+  # Returns info about an entry with specific id
   def show
     @entry = current_user.entries.find(params.require(:id))
     @lecture = LectureViewObject.new(@entry.lecture)
   end
 
-  # POST /entries.json
+  # +POST /entries+
+  #
+  # Creates an entry (or a lecture if the user is an admin)
   def create
     uid = params.require(:uid)
     @user = User.find_by(uid: uid)

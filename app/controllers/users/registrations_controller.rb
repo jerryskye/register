@@ -37,6 +37,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
+  # +GET /users/registration_error+
+  #
+  # Endpoint to redirect to when a registration error occurs
   def registration_error
   end
 
