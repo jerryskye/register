@@ -7,3 +7,4 @@
 *.swp
 *.vim
 /config/master.key
+/.yardoc
