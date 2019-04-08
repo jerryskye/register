@@ -1,7 +1,7 @@
 .card.mb-4
   .card-body
     %h3.card-title= @lecture.subject
-    %h4.card-subtitle.text-muted= @lecture_view_object.timeframe
+    %h4.card-subtitle.text-muted= @lecture.timeframe
   .card-header
     = link_to 'Edit', edit_lecture_path(@lecture), class: 'btn btn-info btn-sm'
     = link_to 'All lectures', lectures_path, class: 'btn btn-primary btn-sm'
