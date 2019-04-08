@@ -16,7 +16,7 @@ class EntriesController < ApplicationController
   # Returns info about an entry with specific id
   def show
     @entry = current_user.entries.find(params.require(:id))
-    @lecture = LectureViewObject.new(@entry.lecture)
+    @lecture = LectureDecorator.new(@entry.lecture)
   end
 
   # +POST /entries+

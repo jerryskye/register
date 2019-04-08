@@ -13,7 +13,6 @@ class LecturesController < ApplicationController
   #
   # Returns info about a lecture with specific id
   def show
-    @lecture_view_object = LectureViewObject.new(@lecture)
   end
 
   # +GET /lectures/:id/edit+
@@ -40,7 +39,7 @@ class LecturesController < ApplicationController
   end
 
   def load_lecture
-    @lecture = Lecture.find(params[:id])
+    @lecture = LectureDecorator.new(Lecture.find(params[:id]))
     render(status: :forbidden) unless @lecture.user == current_user
   end
 end

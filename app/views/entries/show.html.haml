@@ -1,10 +1,10 @@
 .card
-  - if @lecture.lecture?
+  - if @lecture.present?
     .card-body
       %h3.card-title= @lecture.subject
       %h4.card-subtitle.text-muted= @lecture.timeframe
   %ul.list-group.list-group-flush
-    - if @lecture.lecture?
+    - if @lecture.present?
       %li.list-group-item
         %strong Lecturer:
         = @lecture.lecturer
