@@ -17,4 +17,8 @@ class User < ApplicationRecord
   def entries
     Entry.where(uid: uid)
   end
+
+  def to_s
+    "#{name} (#{album_no})"
+  end
 end

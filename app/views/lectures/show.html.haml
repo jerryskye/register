@@ -20,5 +20,5 @@
         - @lecture.entries.each_with_index do |entry, index|
           %tr
             %th= index + 1
-            %td= user_string(entry.user)
+            %td= entry.user
             %td= entry.created_at.strftime('%H:%M')

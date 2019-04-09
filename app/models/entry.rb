@@ -5,6 +5,6 @@ class Entry < ApplicationRecord
 
   # Returns the user object for this entry's uid
   def user
-    User.find_by(uid: uid)
+    User.find_by(uid: uid) || NullUser.new
   end
 end
