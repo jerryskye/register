@@ -5,7 +5,7 @@ class User < ApplicationRecord
   has_many :lectures, dependent: :destroy
   validates :name, presence: true
   validates :uid, presence: true, uniqueness: { message: 'is taken - this card has already been registered!' }, length: { is: 64 }
-  validates :album_no, numericality: { only_integer: true }
+  validates :album_no, numericality: { only_integer: true }, unless: :admin?
 
   # Override of the devise method
   # allows passing attributes via session
