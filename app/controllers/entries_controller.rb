@@ -23,13 +23,13 @@ class EntriesController < ApplicationController
   #
   # Creates an entry (or a lecture if the user is an admin)
   def create
-    uid = params.require(:uid)
+    uid, device_id = entry_params
     @user = User.find_by(uid: uid)
 
     result = if @user&.admin?
-               AddLecture.call(@user, @device_id)
+               AddLecture.call(@user, device_id)
              else
-               AddEntry.call(uid, @device_id)
+               AddEntry.call(uid, device_id)
              end
 
     if result.success?
@@ -41,18 +41,20 @@ class EntriesController < ApplicationController
 
   private
 
+  def entry_params
+    params.require([:uid, :device_id])
+  end
+
   def validate_jwt
     authenticate_or_request_with_http_token do |token, options|
-      begin
-        @device_id = JWT.decode(
-          token,
-          Rails.application.credentials.jwt_secret,
-          true,
-          { algorithm: 'HS256' }).
-        first.fetch('device_id')
-      rescue JWT::DecodeError, KeyError
-        render(plain: "You didn't say the magic word!", status: :unauthorized)
-      end
+      JWT.decode(
+        token,
+        Rails.application.credentials.jwt_secret,
+        true,
+        { algorithm: 'HS256' }
+      )
+    rescue JWT::DecodeError
+      render(plain: "You didn't say the magic word!", status: :unauthorized)
     end
   end
 end

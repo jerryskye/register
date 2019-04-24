@@ -28,7 +28,7 @@ RSpec.describe 'Entries', type: :request do
     end
 
     it "doesn't create any entry" do
-      expect{ subject }.not_to change { Entry.count }
+      expect { subject }.not_to change { Entry.count }
     end
   end
 
@@ -39,10 +39,11 @@ RSpec.describe 'Entries', type: :request do
   end
 
   describe 'POST /entries.json' do
-    subject { post entries_url, as: :json, headers: headers, params: { uid: uid } }
+    subject { post entries_url, as: :json, headers: headers, params: params }
     let(:headers) { { 'Authorization' => "Bearer #{jwt_token}" } }
+    let(:params) { { uid: uid, device_id: device_id } }
     let(:jwt_token) { JWT.encode(jwt_payload, jwt_secret, 'HS256') }
-    let(:jwt_payload) { { exp: exp, device_id: device_id } }
+    let(:jwt_payload) { { exp: exp } }
     let(:jwt_secret) { Rails.application.credentials.jwt_secret }
     let(:exp) { 5.seconds.from_now.to_i }
     let(:device_id) { 'device-id' }
@@ -160,9 +161,11 @@ RSpec.describe 'Entries', type: :request do
     end
 
     context 'with no device_id' do
-      let(:jwt_payload) { { exp: exp } }
+      let(:params) { { uid: uid } }
 
-      include_examples 'invalid credentials'
+      it 'raises ActionController::ParameterMissing' do
+        expect { subject }.to raise_error(ActionController::ParameterMissing)
+      end
     end
   end
 
@@ -178,7 +181,7 @@ RSpec.describe 'Entries', type: :request do
 
       it 'raises ActiveRecord::RecordNotFound' do
         sign_in user
-        expect{ subject }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end
