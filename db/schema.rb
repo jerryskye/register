@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2018_11_03_204153) do
   end
 
   create_table "lectures", force: :cascade do |t|
-    t.string "subject"
+    t.string "subject", default: "No subject", null: false
     t.string "device_id", limit: 64, null: false
     t.datetime "dtstart", null: false
     t.datetime "dtend"

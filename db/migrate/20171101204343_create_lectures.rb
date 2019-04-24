@@ -1,7 +1,7 @@
 class CreateLectures < ActiveRecord::Migration[5.1]
   def change
     create_table :lectures do |t|
-      t.string :subject
+      t.string :subject, null: false, default: 'No subject'
       t.string :device_id, limit: 64, null: false
       t.datetime :dtstart, null: false
       t.datetime :dtstop
